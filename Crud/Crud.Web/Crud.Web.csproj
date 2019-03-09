@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Crud.Business\Crud.Business.csproj" />
     <ProjectReference Include="..\Crud.Data\Crud.Data.csproj" />
   </ItemGroup>
 

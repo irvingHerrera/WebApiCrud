@@ -4,6 +4,8 @@
     {
         public string Message { get; set; }
 
+        public string TechnicalError { get; set; }
+
         public bool Success { get; set; }
 
         public T Object { get; set; }

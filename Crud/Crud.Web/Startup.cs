@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Crud.Business;
+using Crud.Business.ContractBusiness;
 using Crud.Data.Context;
 using Crud.Data.Repository;
 using Crud.Data.RepositoryContract;
@@ -29,6 +31,7 @@ namespace Crud.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IUnityOfWork, UnityOfWork>();
+            services.AddScoped<IUserBusiness, UserBusiness>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<ContextDB>(options =>
