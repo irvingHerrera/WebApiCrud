@@ -99,7 +99,8 @@ namespace Crud.Business
                 result.Object = user;
             }
 
-            throw new System.NotImplementedException();
+            return result;
+
         }
 
         public async Task<ResponseViewModel<UserViewModel>> Delete(int id)
