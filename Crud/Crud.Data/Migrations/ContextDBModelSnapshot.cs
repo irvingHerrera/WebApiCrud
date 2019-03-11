@@ -27,15 +27,21 @@ namespace Crud.Data.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.Property<bool>("Gender");
 
-                    b.Property<string>("Password");
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired();
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired();
 
                     b.Property<bool>("Status");
 
-                    b.Property<string>("UserSystem");
+                    b.Property<string>("UserSystem")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

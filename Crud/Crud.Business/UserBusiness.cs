@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Curd.Common.Enum;
 using Crud.Data.Entities;
+using Curd.Common.Helper;
 
 namespace Crud.Business
 {
@@ -19,11 +20,14 @@ namespace Crud.Business
 
         private User GetModel(UserViewModel viewModel)
         {
+            Security.CrearPasswordHash(viewModel.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
             return new User
             {
                 Id = viewModel.Id,
                 UserSystem = viewModel.User,
-                Password = viewModel.Password,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
                 CreationDate = DateTime.Now,
                 Email = viewModel.Email,
                 Gender = viewModel.Gender == Gender.Male ? true : false,
@@ -44,7 +48,6 @@ namespace Crud.Business
             {
                 Id = user.Id,
                 User = user.UserSystem,
-                Password = user.Password,
                 CreationDate = user.CreationDate,
                 Email = user.Email,
                 Gender = user.Gender ? Gender.Male : Gender.Female,
