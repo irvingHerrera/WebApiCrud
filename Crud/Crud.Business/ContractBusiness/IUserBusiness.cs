@@ -11,6 +11,6 @@ namespace Crud.Business.ContractBusiness
         Task<ResponseViewModel<List<UserViewModel>>> GetAll();
         Task<ResponseViewModel<UserViewModel>> Delete(int id);
         Task<ResponseViewModel<UserViewModel>> Update(UserViewModel user);
-        ResponseViewModel<UserViewModel> Login(UserViewModel user);
+        Task<ResponseViewModel<LoginViewModel>> Login(LoginViewModel model);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Crud.Business.ContractBusiness;
 using Curd.Common.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Crud.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserBusiness userBusiness;
@@ -30,6 +32,13 @@ namespace Crud.Web.Controllers
             }
 
             var user = await userBusiness.Get(id);
+
+            if (!user.Success)
+            {
+                user.StatusCode = (int)HttpStatusCode.NotFound;
+                return NotFound(user);
+            }
+
             user.StatusCode = (int) HttpStatusCode.OK;
             return Ok(user);
         }

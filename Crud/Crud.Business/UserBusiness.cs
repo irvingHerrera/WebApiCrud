@@ -1,13 +1,13 @@
 ﻿using Crud.Business.ContractBusiness;
+using Crud.Data.Entities;
 using Crud.Data.RepositoryContract;
+using Curd.Common.Enum;
+using Curd.Common.Helper;
 using Curd.Common.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using Curd.Common.Enum;
-using Crud.Data.Entities;
-using Curd.Common.Helper;
+using System.Threading.Tasks;
 
 namespace Crud.Business
 {
@@ -29,7 +29,7 @@ namespace Crud.Business
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 CreationDate = DateTime.Now,
-                Email = viewModel.Email,
+                Email = viewModel.Email.ToLower(),
                 Gender = viewModel.Gender == Gender.Male ? true : false,
                 Status = viewModel.Status == Status.Active ? true : false,
             };
@@ -189,9 +189,48 @@ namespace Crud.Business
             return result;
         }
 
-        public ResponseViewModel<UserViewModel> Login(UserViewModel user)
+        public async Task<ResponseViewModel<LoginViewModel>> Login(LoginViewModel model)
         {
-            throw new System.NotImplementedException();
+            var result = new ResponseViewModel<LoginViewModel>();
+            var email = model.Email.ToLower();
+
+            try
+            {
+                var lstUser = await unityOfWork.User.GetAllAsync();
+
+                var user = lstUser.Where(u => u.Status == true)
+                          .FirstOrDefault(u => u.Email.Equals(email));
+
+                if (user == null)
+                {
+                    result.Message = "Usuario o contaseña incorrecto";
+                    result.Success = false;
+                    result.StatusCode = 404;
+                    return result;
+                }
+
+                if (!Security.VerificarPasswordHash(model.Password, user.PasswordHash, user.PasswordSalt))
+                {
+                    result.Message = "Usuario o contaseña incorrecto";
+                    result.Success = false;
+                    result.StatusCode = 404;
+                    return result;
+                }
+
+                result.Success = true;
+                result.Object = new LoginViewModel {
+                    Email = user.Email,
+                    UserName = user.UserSystem
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Message = "Ocurrió un problema al iniciar sesión";
+                result.TechnicalError = ex.Message;
+                result.Success = false;
+                return result;
+            }
         }
 
         public async Task<ResponseViewModel<UserViewModel>> Update(UserViewModel user)
